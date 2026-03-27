@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 
         if (Keyboard.current.wKey.isPressed)
         {
+            Debug.Log(Keyboard.current.wKey.isPressed);
             inputVector.y = 1f;
         }
 
