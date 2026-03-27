@@ -1,43 +1,33 @@
+using Unity.VisualScripting.InputSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+   [SerializeField] private float movingSpeed = 5f;
+    private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerInputActions = new PlayerInputActions();
+        playerInputActions.Enable(); 
     }
 
-    private void Update()
+    private Vector2 GetMovementVector()
     {
-        Vector2 inputVector = new Vector2(0, 0);
+        Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
 
-        if (Keyboard.current.wKey.isPressed)
-        {
-            Debug.Log(Keyboard.current.wKey.isPressed);
-            inputVector.y = 1f;
-        }
+        return inputVector;
+    }
 
-        if (Keyboard.current.sKey.isPressed)
-        {
-            inputVector.y = -1f;
-        }
+    private void FixedUpdate()
+    {
+        Vector2 inputVector = GetMovementVector();
 
+        inputVector = inputVector.normalized;
 
-        if (Keyboard.current.aKey.isPressed)
-        {
-            inputVector.x = -1f;
-        }
-
-
-        if (Keyboard.current.dKey.isPressed)
-        {
-            inputVector.x = 1f;
-        }
-
-        Debug.Log(inputVector);
-
+        rb.MovePosition(rb.position + inputVector * (movingSpeed * Time.fixedDeltaTime));
     }
 }
